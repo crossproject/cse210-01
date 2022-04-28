@@ -1,47 +1,71 @@
 
 def main():
     print("Tic-Tac-Toe")
-    print()
     game_board = create_game_board()
     player_x = []
     player_o = []
+    
+    # Game Loop, it will stop when the result is Win, Lose or Draw.
     while True:
         
+        # PLayer X
         print_board(game_board)
-        player_option = int(input("x's turn to choose a square (1-9): "))
-        while True:
-            if game_board[player_option] == "X" or game_board[player_option] == "O":
-                print("Already taken. Choose other")
-                player_option = int(input("x's turn to choose a square (1-9): "))
-            else:
-                player_x.append(game_board[player_option])
-                game_board[player_option] = "X"
-                break
+        # Player X input
+        player_option = player_input(game_board,"X")
+        
+        # Validate player input
+        player_x.append(game_board[player_option])
+        game_board[player_option] = "X"
+
+        # Check win situation
         if check_win(player_x):
             print_board(game_board)
             print("X's Player Win!")
             break
 
-        print_board(game_board)
-        player_option = int(input("o's turn to choose a square (1-9): "))
-        while True:
-            if game_board[player_option] == "X" or game_board[player_option] == "O":
-                print("Already taken. Choose other")
-                player_option = int(input("o's turn to choose a square (1-9): "))
-            else:
-                player_o.append(game_board[player_option])
-                game_board[player_option] = "O"
-                break
+        # Check draw situation
+        elif check_draw(player_x):
+            print_board(game_board)
+            print("Draw!")
+            break
 
+        # Player O
+        print_board(game_board)
+        # Player O input
+        player_option = player_input(game_board,"O")
+
+        # Validate player input
+        player_o.append(game_board[player_option])
+        game_board[player_option] = "O"
+        
+        
+        # Check win situation
         if check_win(player_o):
             print_board(game_board)
             print("O's Player Win!")
             break
+
+
+def player_input(game_board,player):
+    while True:
+        try:
+            player_option = int(input(f"{player}'s turn to choose a square (1-9): "))
+
+            if player_option > 0 and player_option < 10:
+                if game_board[player_option] == "X" or game_board[player_option] == "O":
+                    print("Already taken. Choose other")
+                else:
+                    break
+            else:
+                print("Error: Wrong Input")
+
+        except ValueError:
+            print("Error: Wrong Input")
+            
+    return player_option
     
-
-
 def create_game_board():
-    game_board = {1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9}
+    game_board = [0,1,2,3,4,5,6,7,8,9]
     return game_board
 
 def print_board(game_board):
@@ -67,6 +91,12 @@ def check_win(player_status):
         else:
             sum = 0
     return False
+
+def check_draw(player_x):
+    if len(player_x) == 5:
+        return True
+    else:
+        return False
 
 if __name__ == "__main__":
     main()
